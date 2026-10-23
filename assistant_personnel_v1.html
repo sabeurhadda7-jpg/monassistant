@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#12304a">
+<title>مساعدي الشخصي | Assistant Personnel</title>
+<style>
+:root{--navy:#12304a;--teal:#0e8b83;--bg:#f3f6f8;--card:#fff;--ink:#182b3a;--muted:#607180;--line:#dce5eb}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif}
+header{background:linear-gradient(135deg,#12304a,#176c75);color:#fff;padding:24px 18px 28px;border-radius:0 0 24px 24px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px}.brand{font-weight:800;font-size:21px}.sub{opacity:.8;font-size:13px;margin-top:4px}
+button,select,input,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:11px 14px;font-weight:700}
+.lang{background:#ffffff20;color:#fff;border:1px solid #ffffff50}
+main{max-width:780px;margin:auto;padding:18px 14px 34px}.welcome{margin:0 0 16px;font-size:15px;line-height:1.7}
+.section-title{font-size:17px;margin:22px 2px 11px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:15px;min-height:144px;box-shadow:0 3px 12px #16344a08;display:flex;flex-direction:column;align-items:flex-start}
+.emoji{font-size:25px;margin-bottom:8px}.tile h3{margin:0 0 6px;font-size:15px}.tile p{font-size:12px;line-height:1.6;color:var(--muted);margin:0 0 13px;flex:1}.tile button,.primary{background:var(--teal);color:#fff;width:100%}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:16px;margin-top:12px}
+label{display:block;font-size:13px;font-weight:700;margin:10px 0 6px}input,textarea,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px;background:#fff;color:var(--ink)}textarea{min-height:85px;resize:vertical}
+.actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.secondary{background:#e6eef2;color:var(--navy)}.tiny{font-size:12px;color:var(--muted);line-height:1.6}
+footer{text-align:center;padding:12px;color:var(--muted);font-size:12px}
+[dir="ltr"] .tile{align-items:flex-start}
+@media(min-width:600px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}header{padding-left:max(18px,calc((100vw - 750px)/2));padding-right:max(18px,calc((100vw - 750px)/2))}}
+</style>
+</head>
+<body>
+<header>
+ <div class="top"><div><div class="brand" id="brand">مساعدي الشخصي</div><div class="sub" id="subtitle">لوحة واحدة لأعمالك ومشاريعك</div></div><button class="lang" id="langBtn">Français</button></div>
+</header>
+<main>
+ <p class="welcome" id="welcome">مرحبًا! اختر القسم المناسب، اكتب تفاصيل مهمتك، ثم اضغط «تحضير المحادثة». سيُنسخ طلبك وتُفتح صفحة ChatGPT لتلصقه وتبدأ بسرعة.</p>
+ <h2 class="section-title" id="sectionsTitle">أقسام المساعد</h2>
+ <div class="grid" id="tiles"></div>
+ <h2 class="section-title" id="quickTitle">رسالة سريعة إلى ChatGPT</h2>
+ <section class="panel">
+  <label id="topicLabel" for="topic">الموضوع</label>
+  <select id="topic">
+   <option value="general">مساعدة عامة</option><option value="maintenance">صيانة كهربائية</option><option value="finance">ميزانية وديون</option><option value="plastic">مشروع الأصص البلاستيكية</option><option value="learning">تعلّم وتقنية</option>
+  </select>
+  <label id="detailsLabel" for="details">اكتب ما تحتاجه</label>
+  <textarea id="details" placeholder="مثال: محرك يتوقف بعد 10 دقائق..."></textarea>
+  <div class="actions"><button class="primary" id="prepare">تحضير المحادثة</button><button class="secondary" id="save">حفظ الملاحظة</button></div>
+  <p class="tiny" id="note">ملاحظة: هذه نسخة تجريبية محلية. لا ترسل بيانات حساسة. حفظ الملاحظة يتم على هذا الجهاز فقط.</p>
+ </section>
+ <h2 class="section-title" id="savedTitle">ملاحظتي المحفوظة</h2>
+ <section class="panel"><p id="savedText" class="tiny">لا توجد ملاحظة محفوظة بعد.</p><div class="actions"><button class="secondary" id="delete">حذف الملاحظة</button></div></section>
+</main>
+<footer id="footer">نسخة أولى تجريبية · لا تتصل تلقائيًا بسجل محادثات ChatGPT</footer>
+<script>
+const data={
+ ar:{
+  brand:"مساعدي الشخصي",subtitle:"لوحة واحدة لأعمالك ومشاريعك",welcome:"مرحبًا! اختر القسم المناسب، اكتب تفاصيل مهمتك، ثم اضغط «تحضير المحادثة». سيُنسخ طلبك وتُفتح صفحة ChatGPT لتلصقه وتبدأ بسرعة.",
+  sectionsTitle:"أقسام المساعد",quickTitle:"رسالة سريعة إلى ChatGPT",topicLabel:"الموضوع",detailsLabel:"اكتب ما تحتاجه",placeholder:"مثال: محرك يتوقف بعد 10 دقائق...",prepare:"تحضير المحادثة",save:"حفظ الملاحظة",note:"ملاحظة: هذه نسخة تجريبية محلية. لا ترسل بيانات حساسة. حفظ الملاحظة يتم على هذا الجهاز فقط.",savedTitle:"ملاحظتي المحفوظة",empty:"لا توجد ملاحظة محفوظة بعد.",delete:"حذف الملاحظة",footer:"نسخة أولى تجريبية · لا تتصل تلقائيًا بسجل محادثات ChatGPT",lang:"Français",copyFirst:"تم نسخ الطلب. افتح ChatGPT والصقه في المحادثة.",copied:"تم نسخ الطلب وفتح ChatGPT.",saved:"تم حفظ الملاحظة على هذا الجهاز.",deleted:"تم حذف الملاحظة.",
+  topics:{general:"مساعدة عامة",maintenance:"صيانة كهربائية",finance:"ميزانية وديون",plastic:"مشروع الأصص البلاستيكية",learning:"تعلّم وتقنية"},
+  tiles:[
+   ["🔧","الصيانة الكهربائية","تشخيص الأعطال، مخططات، قطع الغيار وتسعير التدخلات","maintenance","ساعدني في الصيانة الكهربائية الصناعية. سأشرح العطل والمعطيات المتوفرة؛ اسألني عن المعلومات الناقصة ثم أعطني خطوات تشخيص آمنة."],
+   ["💰","الميزانية والديون","متابعة المصاريف والمداخيل وخطة تسديد الديون","finance","ساعدني في تنظيم الميزانية الشهرية والديون. اعرض الحسابات بوضوح بالدينار التونسي، وميّز بين المعلومات المؤكدة والافتراضات."],
+   ["🏭","مشروع الأصص البلاستيكية","التكلفة، الإنتاج، الآلات، التمويل والمبيعات","plastic","تابع معي مشروع تصنيع أصص الزرع البلاستيكية في تونس. حلّل التكاليف والإنتاج والتمويل بالدينار التونسي، واطلب تحديث الأرقام عند الحاجة."],
+   ["🧰","التدخلات والأسعار","تسجيل وقت العمل والتعقيد وسعر الخدمة","maintenance","ساعدني على تقييم سعر تدخل صيانة صناعية. سأذكر نوع العمل والمدة والتعقيد وقطع الغيار؛ احسب سعرًا عادلًا مع استبعاد ثمن القطع التي يدفعها الحريف."],
+   ["📚","التعلّم والتقنية","PLC، البرمجة، Termux والمهارات المهنية","learning","اشرح لي الموضوع خطوة بخطوة وبطريقة عملية، مع أمثلة مناسبة لمستواي، ووضّح احتياطات السلامة عند التعامل مع المعدات."],
+   ["📝","مهمة جديدة","حضّر طلبًا واضحًا لأي موضوع آخر","general","ساعدني في هذه المهمة. ابدأ بتحديد النتيجة المطلوبة، واسأل سؤالًا واحدًا فقط إذا كانت هناك معلومة أساسية ناقصة."]
+  ]},
+ fr:{
+  brand:"Mon Assistant",subtitle:"Un tableau de bord pour vos projets",welcome:"Bienvenue ! Choisissez une rubrique, décrivez votre besoin puis appuyez sur « Préparer la conversation ». Votre demande sera copiée et ChatGPT s’ouvrira pour la coller.",
+  sectionsTitle:"Rubriques",quickTitle:"Message rapide à ChatGPT",topicLabel:"Sujet",detailsLabel:"Décrivez votre besoin",placeholder:"Ex. : le moteur s’arrête après 10 minutes...",prepare:"Préparer la conversation",save:"Enregistrer la note",note:"Prototype local. N’enregistrez pas de données sensibles. La note reste sur cet appareil.",savedTitle:"Ma note enregistrée",empty:"Aucune note enregistrée.",delete:"Supprimer la note",footer:"Prototype initial · aucune synchronisation automatique avec l’historique ChatGPT",lang:"العربية",copyFirst:"Demande copiée. Ouvrez ChatGPT et collez-la dans la conversation.",copied:"Demande copiée et ChatGPT ouvert.",saved:"Note enregistrée sur cet appareil.",deleted:"Note supprimée.",
+  topics:{general:"Aide générale",maintenance:"Maintenance électrique",finance:"Budget et dettes",plastic:"Projet de pots en plastique",learning:"Apprentissage et technologie"},
+  tiles:[
+   ["🔧","Maintenance électrique","Diagnostic, schémas, pièces et tarifs d’intervention","maintenance","Aidez-moi pour la maintenance électrique industrielle. Je vais décrire la panne et les données disponibles ; demandez les informations manquantes puis proposez un diagnostic sûr."],
+   ["💰","Budget et dettes","Suivi des dépenses, revenus et remboursement","finance","Aidez-moi à organiser mon budget mensuel et mes dettes. Présentez clairement les calculs en dinars tunisiens et distinguez les données confirmées des hypothèses."],
+   ["🏭","Projet de pots plastiques","Coûts, production, machines, financement et ventes","plastic","Suivez avec moi mon projet de fabrication de pots de plantes en plastique en Tunisie. Analysez coûts, production et financement en TND et demandez une mise à jour des chiffres si nécessaire."],
+   ["🧰","Interventions et tarifs","Durée, complexité et prix de la main-d’œuvre","maintenance","Aidez-moi à évaluer le prix d’une intervention de maintenance industrielle. Je préciserai le travail, la durée, la complexité et les pièces ; excluez le prix des pièces payées par le client."],
+   ["📚","Apprentissage et technique","API/PLC, programmation, Termux et compétences pro","learning","Expliquez le sujet étape par étape avec des exemples pratiques adaptés à mon niveau. Précisez les consignes de sécurité pour les équipements."],
+   ["📝","Nouvelle tâche","Préparer une demande claire pour tout autre sujet","general","Aidez-moi pour cette tâche. Commencez par clarifier le résultat souhaité et ne posez qu’une seule question si une information essentielle manque."]
+  ]}
+};
+let lang="ar";
+function render(){
+ const d=data[lang];document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+ ["brand","subtitle","welcome","sectionsTitle","quickTitle","topicLabel","detailsLabel","prepare","save","note","savedTitle","delete","footer"].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=d[id]});
+ document.getElementById("langBtn").textContent=d.lang;document.getElementById("details").placeholder=d.placeholder;
+ const sel=document.getElementById("topic");[...sel.options].forEach(o=>o.textContent=d.topics[o.value]);
+ document.getElementById("tiles").innerHTML=d.tiles.map(t=>`<article class="tile"><div class="emoji">${t[0]}</div><h3>${t[1]}</h3><p>${t[2]}</p><button data-topic="${t[3]}" data-prompt="${encodeURIComponent(t[4])}">${d.prepare}</button></article>`).join("");
+ document.querySelectorAll("[data-topic]").forEach(b=>b.addEventListener("click",()=>{document.getElementById("topic").value=b.dataset.topic;document.getElementById("details").value=tPrompt(b);prepare()}));
+ refreshSaved();
+}
+function tPrompt(b){return decodeURIComponent(b.dataset.prompt)}
+async function prepare(){
+ const d=data[lang], topic=data[lang].topics[document.getElementById("topic").value], details=document.getElementById("details").value.trim();
+ const base=data[lang].tiles.find(t=>t[3]===document.getElementById("topic").value)?.[4]||"Help me with this task.";
+ const prompt=base+(details?(lang==="ar"?"\n\nتفاصيل المهمة:\n":"\n\nDétails de la demande :\n")+details:"");
+ try{await navigator.clipboard.writeText(prompt);alert(d.copied)}catch(e){window.prompt(d.copyFirst,prompt)}
+ window.open("https://chatgpt.com/","_blank","noopener");
+}
+function refreshSaved(){const s=localStorage.getItem("assistant_note");document.getElementById("savedText").textContent=s||data[lang].empty}
+document.getElementById("langBtn").addEventListener("click",()=>{lang=lang==="ar"?"fr":"ar";render()});
+document.getElementById("prepare").addEventListener("click",prepare);
+document.getElementById("save").addEventListener("click",()=>{const val=document.getElementById("details").value.trim();if(!val){alert(data[lang].empty);return}localStorage.setItem("assistant_note",val);refreshSaved();alert(data[lang].saved)});
+document.getElementById("delete").addEventListener("click",()=>{localStorage.removeItem("assistant_note");refreshSaved();alert(data[lang].deleted)});
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101820">
+<meta name="description" content="Mon Assistant — الصيانة والميزانية والمشاريع">
+<link rel="manifest" href="manifest.json">
+<title>Mon Assistant</title>
+<style>
+:root{--bg:#0b1118;--panel:#121d28;--panel2:#182635;--line:#2a3b4b;--text:#f1f5f9;--muted:#a6b5c4;--accent:#39c6a5;--accent2:#4b8df8;--danger:#ff6b76;--radius:20px}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#172838 0,#0b1118 58%);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;min-height:100vh}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.app{max-width:760px;margin:auto;padding:18px 16px 36px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 24px}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-weight:900;font-size:23px;color:#06131a;box-shadow:0 8px 28px #39c6a533}
+h1{font-size:21px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:4px}
+.smallbtn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:13px;padding:10px 12px}
+.welcome{padding:22px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(135deg,#172b3b,#101923);margin-bottom:18px}
+.welcome h2{font-size:23px;margin:0 0 8px}.welcome p{margin:0;color:var(--muted);line-height:1.7}
+.sectiontitle{font-size:16px;margin:22px 2px 12px}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.tile{min-height:135px;text-align:start;border:1px solid var(--line);background:linear-gradient(150deg,var(--panel2),var(--panel));border-radius:20px;padding:17px;color:var(--text);transition:transform .12s}
+.tile:active{transform:scale(.98)}.tile .ico{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:23px;margin-bottom:13px;background:#39c6a51b}
+.tile strong{display:block;font-size:16px}.tile span{display:block;color:var(--muted);font-size:12px;margin-top:5px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px}.stat small{color:var(--muted)}.stat b{display:block;font-size:21px;margin-top:8px}
+.panel{display:none;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px;margin-top:18px}.panel.active{display:block}
+.panelhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}.panelhead h2{font-size:19px;margin:0}
+form{display:grid;gap:11px}label{display:grid;gap:6px;color:var(--muted);font-size:13px}
+input,select,textarea{width:100%;padding:12px 13px;border-radius:12px;border:1px solid var(--line);background:#0b141d;color:var(--text);outline:none}
+textarea{min-height:76px;resize:vertical}
+.primary{border:0;border-radius:13px;padding:13px 16px;background:linear-gradient(100deg,var(--accent),#65d7b5);color:#062019;font-weight:800}
+.secondary{border:1px solid var(--line);border-radius:13px;padding:11px 14px;background:var(--panel2);color:var(--text)}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
+.entries{display:grid;gap:9px;margin-top:15px}.entry{border:1px solid var(--line);background:#0e1720;border-radius:14px;padding:13px}.entry strong{display:block}.entry small{display:block;color:var(--muted);margin-top:5px;line-height:1.6}.entry .del{float:left;border:0;background:transparent;color:var(--danger);font-size:18px}
+.empty{color:var(--muted);font-size:13px;padding:12px 0}
+footer{color:var(--muted);text-align:center;font-size:11px;margin-top:26px;line-height:1.7}
+[dir=ltr] .entry .del{float:right}
+@media(min-width:600px){.tile{min-height:150px}.app{padding:24px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div class="brand"><div class="logo">M</div><div><h1>Mon Assistant</h1><div class="sub" id="tagline">مساعدك الشخصي للعمل والمشاريع</div></div></div>
+ <button class="smallbtn" id="langBtn" aria-label="Change language">FR / ع</button>
+</header>
+<section class="welcome">
+ <h2 id="welcomeTitle">أهلاً بك 👋</h2>
+ <p id="welcomeText">كل أعمالك ومشاريعك في مكان واحد. سجّل تدخلاتك، تابع مصاريفك، واحتفظ بملاحظات مشاريعك.</p>
+</section>
+<div class="sectiontitle" id="modulesTitle">مساحة العمل</div>
+<div class="tiles">
+ <button class="tile" data-panel="maintenance"><div class="ico">🛠️</div><strong id="tileMaintenance">الصيانة الصناعية</strong><span id="tileMaintenanceSub">التدخلات والأسعار</span></button>
+ <button class="tile" data-panel="budget"><div class="ico">💳</div><strong id="tileBudget">الميزانية</strong><span id="tileBudgetSub">المداخيل والمصاريف</span></button>
+ <button class="tile" data-panel="projects"><div class="ico">🏭</div><strong id="tileProjects">المشاريع</strong><span id="tileProjectsSub">الأفكار والمتابعة</span></button>
+ <button class="tile" data-panel="assistant"><div class="ico">🤖</div><strong id="tileAssistant">ChatGPT</strong><span id="tileAssistantSub">افتح المساعد الذكي</span></button>
+</div>
+<div class="stats">
+ <div class="stat"><small id="statJobsLabel">تدخلات مسجلة</small><b id="statJobs">0</b></div>
+ <div class="stat"><small id="statBudgetLabel">حركات مالية</small><b id="statBudget">0</b></div>
+</div>
+
+<section class="panel" id="maintenance">
+ <div class="panelhead"><h2 id="maintTitle">تسجيل تدخل صيانة</h2><button class="secondary back">رجوع</button></div>
+ <form id="maintForm">
+  <label><span id="mTypeLabel">نوع التدخل / العطل</span><input name="type" required placeholder="مثال: تشخيص محرك"></label>
+  <label><span id="mTimeLabel">مدة العمل (دقيقة)</span><input name="minutes" type="number" min="0" required placeholder="مثال: 60"></label>
+  <label><span id="mComplexityLabel">التعقيد</span><select name="complexity"><option value="1">بسيط</option><option value="1.25">متوسط</option><option value="1.5">معقد</option></select></label>
+  <label><span id="mPriceLabel">سعر اليد العاملة (د.ت)</span><input name="price" type="number" min="0" step="0.5" required placeholder="مثال: 70"></label>
+  <label><span id="mNotesLabel">ملاحظات (اختياري)</span><textarea name="notes" placeholder="قطع الغيار على حساب الزبون..."></textarea></label>
+  <button class="primary" type="submit" id="saveMaint">حفظ التدخل</button>
+ </form><div class="entries" id="maintEntries"></div>
+</section>
+
+<section class="panel" id="budget">
+ <div class="panelhead"><h2 id="budgetTitle">تسجيل حركة مالية</h2><button class="secondary back">رجوع</button></div>
+ <form id="budgetForm">
+  <label><span id="bTypeLabel">النوع</span><select name="kind"><option value="income">مدخول</option><option value="expense">مصروف</option><option value="debt">سداد دين</option></select></label>
+  <label><span id="bDescLabel">الوصف</span><input name="description" required placeholder="مثال: أجر شهري"></label>
+  <label><span id="bAmountLabel">المبلغ (د.ت)</span><input name="amount" type="number" min="0" step="0.1" required></label>
+  <label><span id="bDateLabel">التاريخ</span><input name="date" type="date" required></label>
+  <button class="primary" type="submit" id="saveBudget">حفظ الحركة</button>
+ </form><div class="entries" id="budgetEntries"></div>
+</section>
+
+<section class="panel" id="projects">
+ <div class="panelhead"><h2 id="projectsTitle">ملاحظات المشاريع</h2><button class="secondary back">رجوع</button></div>
+ <form id="projectForm">
+  <label><span id="pNameLabel">اسم المشروع</span><input name="name" required placeholder="مثال: تصنيع أصص بلاستيكية"></label>
+  <label><span id="pStatusLabel">الحالة</span><select name="status"><option value="idea">فكرة</option><option value="study">قيد الدراسة</option><option value="active">قيد التنفيذ</option><option value="done">مكتمل</option></select></label>
+  <label><span id="pNotesLabel">ملاحظات وخطوات قادمة</span><textarea name="notes"></textarea></label>
+  <button class="primary" type="submit" id="saveProject">حفظ المشروع</button>
+ </form><div class="entries" id="projectEntries"></div>
+</section>
+
+<section class="panel" id="assistant">
+ <div class="panelhead"><h2 id="assistantTitle">المساعد الذكي</h2><button class="secondary back">رجوع</button></div>
+ <p id="assistantText">يمكنك فتح ChatGPT في المتصفح. مشاركة البيانات مع ChatGPT ليست تلقائية؛ انسخ الملاحظات التي تريد مناقشتها بنفسك.</p>
+ <div class="actions"><button class="primary" id="openChat">فتح ChatGPT</button><button class="secondary" id="copySummary">نسخ ملخص البيانات</button></div>
+ <p class="sub" id="privacyNote">بياناتك محفوظة محليًا في هذا المتصفح على هذا الجهاز. امسح بيانات المتصفح قد يؤدي إلى حذفها؛ استخدم التصدير للاحتفاظ بنسخة.</p>
+</section>
+<div class="actions"><button class="secondary" id="exportBtn">تصدير نسخة احتياطية JSON</button><label class="secondary" style="display:inline-flex;align-items:center;cursor:pointer"><span id="importLabel">استيراد نسخة</span><input type="file" id="importFile" accept=".json,application/json" style="display:none"></label></div>
+<footer id="footerText">نسخة أولية • احفظ نسخة احتياطية بانتظام. لا تتضمن هذه النسخة مزامنة سحابية أو ربطًا تلقائيًا بواجهة ChatGPT.</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const storeKey='monAssistantDataV1';
+let data={maintenance:[],budget:[],projects:[]};
+try{data={...data,...JSON.parse(localStorage.getItem(storeKey)||'{}')}}catch(e){}
+let lang=localStorage.getItem('monAssistantLang')||'ar';
+const dict={
+ar:{tagline:'مساعدك الشخصي للعمل والمشاريع',welcomeTitle:'أهلاً بك 👋',welcomeText:'كل أعمالك ومشاريعك في مكان واحد. سجّل تدخلاتك، تابع مصاريفك، واحتفظ بملاحظات مشاريعك.',modulesTitle:'مساحة العمل',tileMaintenance:'الصيانة الصناعية',tileMaintenanceSub:'التدخلات والأسعار',tileBudget:'الميزانية',tileBudgetSub:'المداخيل والمصاريف',tileProjects:'المشاريع',tileProjectsSub:'الأفكار والمتابعة',tileAssistant:'ChatGPT',tileAssistantSub:'افتح المساعد الذكي',statJobsLabel:'تدخلات مسجلة',statBudgetLabel:'حركات مالية',maintTitle:'تسجيل تدخل صيانة',mTypeLabel:'نوع التدخل / العطل',mTimeLabel:'مدة العمل (دقيقة)',mComplexityLabel:'التعقيد',mPriceLabel:'سعر اليد العاملة (د.ت)',mNotesLabel:'ملاحظات (اختياري)',saveMaint:'حفظ التدخل',budgetTitle:'تسجيل حركة مالية',bTypeLabel:'النوع',bDescLabel:'الوصف',bAmountLabel:'المبلغ (د.ت)',bDateLabel:'التاريخ',saveBudget:'حفظ الحركة',projectsTitle:'ملاحظات المشاريع',pNameLabel:'اسم المشروع',pStatusLabel:'الحالة',pNotesLabel:'ملاحظات وخطوات قادمة',saveProject:'حفظ المشروع',assistantTitle:'المساعد الذكي',assistantText:'يمكنك فتح ChatGPT في المتصفح. مشاركة البيانات مع ChatGPT ليست تلقائية؛ انسخ الملاحظات التي تريد مناقشتها بنفسك.',openChat:'فتح ChatGPT',copySummary:'نسخ ملخص البيانات',privacyNote:'بياناتك محفوظة محليًا في هذا المتصفح على هذا الجهاز. مسح بيانات المتصفح قد يؤدي إلى حذفها؛ استخدم التصدير للاحتفاظ بنسخة.',exportBtn:'تصدير نسخة احتياطية JSON',importLabel:'استيراد نسخة',footerText:'نسخة أولية • احفظ نسخة احتياطية بانتظام. لا تتضمن هذه النسخة مزامنة سحابية أو ربطًا تلقائيًا بواجهة ChatGPT.',back:'رجوع',simple:'بسيط',medium:'متوسط',complex:'معقد',income:'مدخول',expense:'مصروف',debt:'سداد دين',idea:'فكرة',study:'قيد الدراسة',active:'قيد التنفيذ',done:'مكتمل',notes:'ملاحظات',minutes:'دقيقة',dt:'د.ت',empty:'لا توجد بيانات بعد.',delete:'حذف',confirmDelete:'هل تريد حذف هذا السجل؟',saved:'تم الحفظ',copied:'تم النسخ',importOk:'تم استيراد النسخة',badFile:'ملف غير صالح',date:'التاريخ'},
+fr:{tagline:'Votre assistant personnel pour le travail et les projets',welcomeTitle:'Bienvenue 👋',welcomeText:'Tous vos travaux et projets au même endroit. Enregistrez les interventions, suivez le budget et conservez les notes.',modulesTitle:'Espace de travail',tileMaintenance:'Maintenance industrielle',tileMaintenanceSub:'Interventions et tarifs',tileBudget:'Budget',tileBudgetSub:'Revenus et dépenses',tileProjects:'Projets',tileProjectsSub:'Idées et suivi',tileAssistant:'ChatGPT',tileAssistantSub:'Ouvrir l’assistant',statJobsLabel:'Interventions enregistrées',statBudgetLabel:'Mouvements financiers',maintTitle:'Nouvelle intervention',mTypeLabel:'Type d’intervention / panne',mTimeLabel:'Durée de travail (minutes)',mComplexityLabel:'Complexité',mPriceLabel:'Prix de la main-d’œuvre (TND)',mNotesLabel:'Notes (facultatif)',saveMaint:'Enregistrer l’intervention',budgetTitle:'Nouveau mouvement financier',bTypeLabel:'Type',bDescLabel:'Description',bAmountLabel:'Montant (TND)',bDateLabel:'Date',saveBudget:'Enregistrer',projectsTitle:'Notes des projets',pNameLabel:'Nom du projet',pStatusLabel:'Statut',pNotesLabel:'Notes et prochaines étapes',saveProject:'Enregistrer le projet',assistantTitle:'Assistant intelligent',assistantText:'Vous pouvez ouvrir ChatGPT dans le navigateur. Le partage des données n’est pas automatique ; copiez vous-même les notes à discuter.',openChat:'Ouvrir ChatGPT',copySummary:'Copier le résumé des données',privacyNote:'Les données sont enregistrées localement dans ce navigateur sur cet appareil. Effacer les données du navigateur peut les supprimer ; exportez une sauvegarde.',exportBtn:'Exporter une sauvegarde JSON',importLabel:'Importer une sauvegarde',footerText:'Version initiale • Faites régulièrement une sauvegarde. Pas de synchronisation cloud ni de connexion automatique à l’API ChatGPT.',back:'Retour',simple:'Simple',medium:'Moyenne',complex:'Complexe',income:'Revenu',expense:'Dépense',debt:'Remboursement de dette',idea:'Idée',study:'À l’étude',active:'En cours',done:'Terminé',notes:'Notes',minutes:'min',dt:'TND',empty:'Aucune donnée pour le moment.',delete:'Supprimer',confirmDelete:'Supprimer cet enregistrement ?',saved:'Enregistré',copied:'Copié',importOk:'Sauvegarde importée',badFile:'Fichier invalide',date:'Date'}
+};
+function t(k){return (dict[lang]||dict.ar)[k]||k}
+function persist(){localStorage.setItem(storeKey,JSON.stringify(data));renderAll()}
+function applyLang(){document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';Object.keys(dict.ar).forEach(k=>{if($(k))$(k).textContent=t(k)});document.querySelectorAll('.back').forEach(b=>b.textContent=t('back'));document.querySelectorAll('[name="complexity"] option').forEach((o,i)=>o.textContent=[t('simple'),t('medium'),t('complex')][i]);const kinds=document.querySelectorAll('[name="kind"] option');['income','expense','debt'].forEach((v,i)=>kinds[i].textContent=t(v));const statuses=document.querySelectorAll('[name="status"] option');['idea','study','active','done'].forEach((v,i)=>statuses[i].textContent=t(v));$('langBtn').textContent=lang==='ar'?'FR':'عربي';renderAll()}
+function showPanel(id){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));$(id).classList.add('active');$(id).scrollIntoView({behavior:'smooth',block:'start'})}
+document.querySelectorAll('.tile').forEach(b=>b.addEventListener('click',()=>{let id=b.dataset.panel;if(id==='assistant'){showPanel(id);return}showPanel(id)}));
+document.querySelectorAll('.back').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));window.scrollTo({top:0,behavior:'smooth'})}));
+$('langBtn').addEventListener('click',()=>{lang=lang==='ar'?'fr':'ar';localStorage.setItem('monAssistantLang',lang);applyLang()});
+function safe(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderList(key,id,make){let el=$(id);let arr=data[key]||[];el.innerHTML=arr.length?arr.slice().reverse().map((x,rev)=>{let idx=arr.length-1-rev;return `<div class="entry"><button class="del" data-key="${key}" data-index="${idx}" aria-label="${t('delete')}">×</button>${make(x)}<small>${safe(x.created||'')}</small></div>`}).join(''):`<div class="empty">${t('empty')}</div>`}
+function renderAll(){
+ $('statJobs').textContent=(data.maintenance||[]).length;
+ $('statBudget').textContent=(data.budget||[]).length;
+ renderList('maintenance','maintEntries',x=>`<strong>${safe(x.type)} — ${safe(x.price)} ${t('dt')}</strong><small>${safe(x.minutes)} ${t('minutes')} · ${safe(t(x.complexityLabel||'medium'))}${x.notes?' · '+safe(x.notes):''}</small>`);
+ renderList('budget','budgetEntries',x=>`<strong>${safe(t(x.kind))}: ${safe(x.description)} — ${safe(x.amount)} ${t('dt')}</strong><small>${safe(x.date||'') }</small>`);
+ renderList('projects','projectEntries',x=>`<strong>${safe(x.name)} — ${safe(t(x.status))}</strong><small>${safe(x.notes||'')}</small>`);
+ document.querySelectorAll('.del').forEach(b=>b.onclick=()=>{if(confirm(t('confirmDelete'))){data[b.dataset.key].splice(Number(b.dataset.index),1);persist()}});
+}
+function stamp(){return new Date().toLocaleString(lang==='ar'?'ar-TN':'fr-TN')}
+$('maintForm').addEventListener('submit',e=>{e.preventDefault();let f=new FormData(e.target);let c=f.get('complexity');data.maintenance.push({type:f.get('type'),minutes:Number(f.get('minutes')),complexity:c,complexityLabel:c==='1'?'simple':c==='1.25'?'medium':'complex',price:Number(f.get('price')),notes:f.get('notes'),created:stamp()});persist();e.target.reset()});
+$('budgetForm').addEventListener('submit',e=>{e.preventDefault();let f=new FormData(e.target);data.budget.push({kind:f.get('kind'),description:f.get('description'),amount:Number(f.get('amount')),date:f.get('date'),created:stamp()});persist();e.target.reset();e.target.elements.date.value=new Date().toISOString().slice(0,10)});
+$('projectForm').addEventListener('submit',e=>{e.preventDefault();let f=new FormData(e.target);data.projects.push({name:f.get('name'),status:f.get('status'),notes:f.get('notes'),created:stamp()});persist();e.target.reset()});
+$('budgetForm').elements.date.value=new Date().toISOString().slice(0,10);
+$('openChat').onclick=()=>window.open('https://chatgpt.com/','_blank','noopener');
+$('copySummary').onclick=async()=>{let summary=JSON.stringify(data,null,2);try{await navigator.clipboard.writeText(summary);alert(t('copied'))}catch(e){prompt('Copy:',summary)}};
+$('exportBtn').onclick=()=>{let blob=new Blob([JSON.stringify({version:1,exported:new Date().toISOString(),data},null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='MonAssistant-backup.json';a.click();URL.revokeObjectURL(a.href)};
+$('importFile').onchange=async e=>{try{let obj=JSON.parse(await e.target.files[0].text());let d=obj.data||obj;if(!Array.isArray(d.maintenance)||!Array.isArray(d.budget)||!Array.isArray(d.projects))throw Error();data=d;persist();alert(t('importOk'))}catch(err){alert(t('badFile'))}e.target.value=''};
+applyLang();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body>
+</html>
